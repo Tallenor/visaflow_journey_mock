@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import useLocalStorageUser from "@/lib/hooks/user-hook";
 import {
   Select,
   SelectContent,
@@ -12,24 +13,17 @@ import {
 } from "@/components/ui/select";
 
 export function LoginForm() {
+  const { user, setUser } = useLocalStorageUser()
   const [form, setForm] = useState({
     email: "johndoe@email.com",
     password: "password",
   });
-  const [user] = useState(() => {
-    const user = typeof window !== "undefined" && localStorage.getItem("user");
-    if (user) {
-      return JSON.parse(user);
-    }
-    return {
-      email: "",
-    };
-  });
+  
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    localStorage.setItem("user", JSON.stringify(form));
+    setUser(form)
     alert("Login successful, press ok to continue");
     window.location.href = "/";
     console.log(form);
@@ -66,24 +60,19 @@ export function LoginForm() {
 }
 
 function Over30() {
-  const [over30, setOver30] = useState(false);
+  const { user, updateUser } = useLocalStorageUser()
+  const [over30, setOver30] = useState(user.over30 ? true : false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleValueChange = (e: any) => {
-  setOver30(e === "yes" ? true : false);
-  }
+    setOver30(e === "yes" ? true : false);
+  };
 
   useEffect(() => {
-    const user = typeof window !== "undefined" && localStorage.getItem("user");
-    if (user) {
-      const u = JSON.parse(user)
-      u.over30 = over30
-      localStorage.setItem("user", JSON.stringify(u));
-    };
-    
+    updateUser({ over30 });
   }, [over30]);
   return (
     <>
-      <Select onValueChange={handleValueChange}>
+      <Select onValueChange={handleValueChange} defaultValue={over30 ? "yes" : "no"}>
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Are you over 30?" />
         </SelectTrigger>
@@ -92,7 +81,49 @@ function Over30() {
           <SelectItem value="no">No</SelectItem>
         </SelectContent>
       </Select>
-      {over30 && <Button>Continue</Button>}
+      {over30 && (
+        <>
+          <WantsResidencePermit />
+        </>
+      )}
+    </>
+  );
+}
+
+function WantsResidencePermit() {
+  const { user, updateUser } = useLocalStorageUser()
+  const [wantsResidencePermit, setWantsResidencePermit] = useState(user.wantsResidencePermit ? true : false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleValueChange = (e: any) => {
+    setWantsResidencePermit(e === "yes" ? true : false);
+  };
+
+  useEffect(() => {
+    updateUser({ wantsResidencePermit });
+  }, [wantsResidencePermit]);
+  
+  return (
+    <>
+      <Select onValueChange={handleValueChange} defaultValue={wantsResidencePermit ? "yes" : "no"}>
+        <SelectTrigger className="w-[300px]">
+          <SelectValue placeholder="Do want to apply for a residence permit?" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="yes">Yes</SelectItem>
+          <SelectItem value="no">No</SelectItem>
+        </SelectContent>
+      </Select>
+      {wantsResidencePermit ? (
+        <>
+          <p>You have indicated that you want to apply for a <strong>Residence Permit</strong>, click below to continue</p>
+          <Button>Continue to Residence Permit</Button>
+        </>
+      ): (
+        <>
+          <p>You have indicated that you want to apply for a <strong>Visa</strong>, click below to continue</p>
+          <Button>Continue to Visa Application</Button>
+        </>
+      )}
     </>
   );
 }

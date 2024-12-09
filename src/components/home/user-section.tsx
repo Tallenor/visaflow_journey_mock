@@ -1,17 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import useLocalStorageUser from "@/lib/hooks/user-hook";
 
 export function UserSection() {
-  const [user] = useState(() => {
-    const user = typeof window !== "undefined" && localStorage.getItem("user");
-    if (user) {
-      return JSON.parse(user);
-    }
-    return {
-      email: "",
-      password: "",
-    };
-  });
+  const { user } = useLocalStorageUser();
   return <div suppressHydrationWarning>Current user: {user.email}</div>;
 }
