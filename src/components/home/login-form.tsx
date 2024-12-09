@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 
 export function LoginForm() {
-  const { user, setUser } = useLocalStorageUser()
+  const { user, updateUser, setUser } = useLocalStorageUser()
   const [form, setForm] = useState({
     email: "johndoe@email.com",
     password: "password",
@@ -23,7 +23,7 @@ export function LoginForm() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    setUser(form)
+    updateUser(form);
     alert("Login successful, press ok to continue");
     window.location.href = "/";
     console.log(form);
@@ -31,6 +31,7 @@ export function LoginForm() {
 
   useEffect(() => {
     console.log(form);
+    updateUser(form);
   }, [form]);
   return (
     <div>
@@ -69,6 +70,7 @@ function Over30() {
 
   useEffect(() => {
     updateUser({ over30 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [over30]);
   return (
     <>
@@ -100,6 +102,7 @@ function WantsResidencePermit() {
 
   useEffect(() => {
     updateUser({ wantsResidencePermit });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wantsResidencePermit]);
   
   return (
@@ -116,12 +119,12 @@ function WantsResidencePermit() {
       {wantsResidencePermit ? (
         <>
           <p>You have indicated that you want to apply for a <strong>Residence Permit</strong>, click below to continue</p>
-          <Button>Continue to Residence Permit</Button>
+          <Button onClick={() => window.location.href = "/residence-permit-flow"}>Continue to Residence Permit</Button>
         </>
       ): (
         <>
           <p>You have indicated that you want to apply for a <strong>Visa</strong>, click below to continue</p>
-          <Button>Continue to Visa Application</Button>
+          <Button onClick={() => window.location.href = "/visa-flow"}>Continue to Visa Application</Button>
         </>
       )}
     </>
