@@ -74,6 +74,7 @@ function Over30() {
   }, [over30]);
   return (
     <>
+      <p>Are you over 30?</p>
       <Select onValueChange={handleValueChange} defaultValue={over30 ? "yes" : "no"}>
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Are you over 30?" />
@@ -107,6 +108,7 @@ function WantsResidencePermit() {
   
   return (
     <>
+      <p>Do you want to apply for a residence permit?</p>
       <Select onValueChange={handleValueChange} defaultValue={wantsResidencePermit ? "yes" : "no"}>
         <SelectTrigger className="w-[300px]">
           <SelectValue placeholder="Do want to apply for a residence permit?" />
