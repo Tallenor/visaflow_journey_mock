@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 
 export function LoginForm() {
-  const { user, updateUser, setUser } = useLocalStorageUser()
+  const { user, updateUser } = useLocalStorageUser()
   const [form, setForm] = useState({
     email: "johndoe@email.com",
     password: "password",
